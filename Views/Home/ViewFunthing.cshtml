@@ -1,0 +1,26 @@
+@model Funthing
+
+<a class="HomeLink" asp-action="Dashboard">Home</a><br>
+<a class="HomeLink" asp-action="Logout">Logout</a><br>
+@if(Model.Participants.All(f=>f.UserId!=ViewBag.UserLoggedIn.UserId))
+    {
+        <a asp-action="AddResponse" asp-controller="Home" asp-route-funthingId="@Model.FunthingId" asp-route-userId="@ViewBag.UserLoggedIn.UserId" asp-route-status="join">Join</a>
+    }
+
+<h4>Welcome to the @Model.Title event!</h4><br>
+
+<h4>Event Coordinator: @Model.Creator.FirstName</h4><br>
+
+<h4>Event Description:</h4>
+<h6>@Model.Description</h6>
+
+<h4>Who will be attending this Funthing?</h4>
+<ul>
+@foreach(var P in Model.Participants)
+{
+    <li>@P.Participant.FirstName @P.Participant.LastName</li>
+}
+</ul>
+
+
+

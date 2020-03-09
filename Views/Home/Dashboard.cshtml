@@ -1,0 +1,70 @@
+@model List<Funthing>
+
+<h1>Hello, @ViewBag.UserLoggedIn.FirstName Welcome to the Fun Thing Page!</h1> 
+<a class="HomeLink" asp-action="Logout">Logout</a><br>
+
+
+
+<table class="table table hover">
+    <thead>
+        <tr>
+            <th>Funthing</th>
+            <th>Date and Time</th>
+            <th>Duration</th>
+            <th>Funthing Coordinator</th>
+            <th># Participants</th>
+            <th>Actions</th>
+            @* fix this later *@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var funthing in @Model.OrderBy(f=>f.FunthingDate))
+        {
+        <tr>
+            <td><a asp-action="ViewFunthing" asp-route-funthingId=@funthing.FunthingId>@funthing.Title</a></td>
+            <td>@funthing.FunthingDate</td>
+            <td>@funthing.Duration</td>
+            <td>@funthing.Creator.FirstName @funthing.Creator.LastName</td>
+            <td>@funthing.Participants.Count</td>
+            @if(ViewBag.UserLoggedIn.UserId == funthing.Creator.UserId)
+            {
+                <td><a asp-action="DeleteFunthing" asp-route-funthingId=@funthing.FunthingId>Delete</a></td>
+            }
+            else
+            {
+                @if(funthing.Participants.Any(f=>f.UserId==ViewBag.UserLoggedIn.UserId))
+                {
+                    <td><a asp-action="AddResponse" asp-controller="Home" asp-route-funthingId="@funthing.FunthingId" asp-route-userId="@ViewBag.UserLoggedIn.UserId" asp-route-status="unjoin">Leave</a></td>
+                }
+                @if(funthing.Participants.All(f=>f.UserId!=ViewBag.UserLoggedIn.UserId))
+                {
+                    <td><a asp-action="AddResponse" asp-controller="Home" asp-route-funthingId="@funthing.FunthingId" asp-route-userId="@ViewBag.UserLoggedIn.UserId" asp-route-status="join">Join</a></td>
+                }
+            }
+
+            
+            
+        </tr>
+        }
+
+
+
+    </tbody>
+
+
+
+</table>
+
+
+
+
+
+
+
+
+
+<form asp-action="CreateFunthing" Controller="Home" method="post">
+
+    <input type="submit" value="Add Funthing" class="btn btn-outline-warning">
+</form>
+
